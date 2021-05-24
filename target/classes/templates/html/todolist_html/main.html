@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="../../css/fontawesome-all.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/main.css" rel="stylesheet">
+    <link href="../../test1/magicBtn.css" rel="stylesheet">
+    <link href="../../test1/maina.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://www.huangwx.cn/css/sweetalert.css">
+    <script type="text/javascript" src="http://www.huangwx.cn/js/sweetalert-dev.js"></script>
+    <title>主页</title>
+
+</head>
+<body class="magnific-btn-function">
+<script src="../../test1/testindex/js/canvas-particle.js" type="text/javascript"></script>
+<script src="../../jqsrc/jquery-1.7.2.js" type="text/javascript"></script>
+<script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+<script>window.jQuery || document.write('<script src="../../test1/js/jquery-1.11.0.min.js"><\/script>')</script>
+<script src="../../test1/js/magicBtn.js" type="text/javascript"></script>
+<script src="../../test1/js/main.js" type="text/javascript"></script>
+
+<script charset="utf-8">
+    //获取cookie代码
+    var getCookie = function (name) {
+        var arr;
+        var reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg)) {
+            return arr[2];
+        } else
+            return null;
+    };
+    var editfunc = function (element) {
+        if (element.text === "编辑") {
+            $(element).siblings("div").children("span").children("span").attr("contentEditable", "true")
+            $(element).siblings("ul").children().attr("contentEditable", "true");
+            $(element).siblings("h3").attr("contentEditable", "true");
+            $(element).text("确定编辑")
+            $(element).parent().css({"background": "#EAF2D3"})
+        } else {
+            i = element.id;
+            var ergen = $(element).siblings("div").children("span").children("span").html()
+
+            var obj = $(element).siblings("ul").children("li")
+            stime = obj.eq(1).html()
+            etime = obj.eq(2).html()
+            url = "/data/update2?header=" + $(element).siblings("h3").html() +
+                "&ergency=" + ergen +
+                "&start_time=" + stime +
+                "&end_time=" + etime +
+                "&addup=" + obj.eq(0).html() +
+                "&id=" + i;
+            var xmlhttp;
+            var regt = new RegExp("\\d{4}-(([0][1,3-9]|[1][0,1,2])-([0,1,2]\\d|[3][0,1])|(02-[0,1,2]\\d))\\s+([0,1]\\d|[2][0,1,2,3]):([0,1,2,3,4,5]\\d)");
+            var rege = new RegExp("^([1-9]|10)$");
+            if (!rege.test(ergen)) {
+                alert("优先级格式不正确")
+                return false;
+            }
+            if (!regt.test(stime)) {
+                alert("开始时间格式不正确")
+                return false;
+            }
+            if (!regt.test(etime)) {
+                alert("结束时间格式不正确")
+                return false;
+            }
+            if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            }
+            url = encodeURI(url)
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+            $(element).siblings("div").children("span").children("span").attr("contentEditable", "false")
+            $(element).siblings("ul").children().attr("contentEditable", "false");
+            $(element).siblings("h3").attr("contentEditable", "false");
+            $(element).text("编辑")
+            swal({ type: "success", title: "已修改" });
+            $(element).parent().css({"background": "white"})
+
+        }
+
+    }
+
+
+    var goquit = function () {
+        //清除所有cookie函数
+        var date = new Date();
+        date.setTime(date.getTime() - 10000);
+        //keys为所要删除cookie的名字
+        var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+        //删除所有cookie
+        if (keys) {
+            for (var i = keys.length; i--;)
+                document.cookie = keys[i] + "=0; expire=" + date.toUTCString() + "; path=/";
+        }
+        swal("再见", "欢迎再来");
+
+        setTimeout(function () {
+            window.location.href = "../../index.html";
+        }, 1000)
+    }
+
+    function showList(cookie) {
+        url = "username=" + cookie
+        var xmlhttp;
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        }
+        xmlhttp.open("GET", "/data/update1?" + url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function () {
+            // 判断readyState就绪状态是否为4，判断status响应状态码是否为200
+            var result;
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                result = JSON.parse(xmlhttp.responseText)
+                //获取服务器的响应结果
+                for (var i = 0; i < result.length; i++) {
+
+                    html1 = "<div class=\"col-md-4 col-sm-6\">\n" +
+                        "                        <div class=\"pricingTable\">\n" +
+                        "                        <h3 class=\"title\" id='aheader'></h3>\n" +
+                        "                        <div class=\"price-value\" id='decorate'>\n" +
+                        "                        <span class=\"amount\">\n" +
+                        "                        <span value=\"\" id='aergency'></span>\n" +
+                        "                        </span>\n" +
+                        "                        </div>\n" +
+                        "                        <ul class=\"pricing-content\">\n" +
+                        "                        备注：<li id='aaddup'></li>\n" +
+                        "                    开始时间：<li id='astarttime'></li>\n" +
+                        "                    结束时间：<li id='aendtime'></li>\n" +
+                        "                    </ul>\n" +
+                        "                    <a href=\"#\" class=\"pricingTable-signup\" onclick='deletefront(this)' id='btn'>完成</a>\n" +
+                        "                    <a href=\"#\" class=\"pricingTable-signup\" onclick='editfunc(this)' id='btn1'>编辑</a>\n" +
+                        "                    </div>\n" +
+                        "                    </div>"
+                    str = i + "h"
+                    $("#show").append(html1)
+                    $("#aheader").attr("id", i + "h")
+                    $("#aergency").attr("id", i + "e")
+                    $("#aaddup").attr("id", i + "a")
+                    $("#astarttime").attr("id", i + "s")
+                    $("#aendtime").attr("id", i + "end")
+                    $("#decorate").attr("id", i + "deco")
+                    $("#btn").attr("id", result[i]["id"])
+                    $("#btn1").attr("id", result[i]["id"])
+                    $("#" + i + "h").html(result[i]["header"])
+                    $("#" + i + "e").html(result[i]["ergency"])
+                    $("#" + i + "a").html(result[i]["addup"])
+                    $("#" + i + "s").html(result[i]["start_time"])
+                    $("#" + i + "end").html(result[i]["end_time"])
+                    dec_class = "price-value" + result[i]["ergency"]
+                    $("#" + i + "deco").attr("class", dec_class)
+                }
+            }
+        }
+    }
+
+    var deletefront = function (btn) {
+        url = "id=" + btn.id
+        var xmlhttp;
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        }
+        xmlhttp.open("GET", "/data/delete?" + url, true);
+        xmlhttp.send();
+        swal("很棒", "恭喜你完成了这项任务");
+        setTimeout(function () {
+            location.reload()
+        }, 1000)
+    };
+
+    $(function () {
+        var config = {
+            vx: 4,
+            vy: 4,
+            height: 2,
+            width: 2,
+            count: 200,
+            color: "121, 162, 185",
+            stroke: "100, 200, 180",
+            dist: 6000,
+            e_dist: 20000,
+            max_conn: 10
+        }
+        CanvasParticle(config);
+        showList(unescape(getCookie("username")))
+    })
+</script>
+<button class="magicBtn large" id="btnOut1" onclick="location.href='insert.html'"
+        style="background-color: #4b8f29">添加任务
+</button>
+<button class="magicBtn large" id="btnOut2" onclick="location.href='../userop_html/updateself.html'"
+        style="background-color: #4b8f29">修改密码
+</button>
+<button class="magicBtn large" id="quit" onclick="goquit()" style="background-color: #4b8f29">退出</button>
+<div class="container">
+    <div class="row" id="show">
+    </div>
+</div>
+
+</body>
+</html>

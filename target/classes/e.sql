@@ -1,0 +1,1 @@
+set global time_zone = '+8:00';

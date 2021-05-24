@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+    <title>新建任务</title>
+    <link href="../../test1/a.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="http://www.huangwx.cn/css/sweetalert.css">
+    <script type="text/javascript" src="http://www.huangwx.cn/js/sweetalert-dev.js"></script>
+</head>
+
+<body>
+<script src="../../jqsrc/jquery-1.7.2.js" type="text/javascript"></script>
+<script>
+    var getCookie = function (name) {
+        var arr;
+        var reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg)) {
+            return arr[2];
+        } else
+            return null;
+    };
+
+
+    $(function () {
+        var $form = $("#form01")
+        html = "<input required=\"required\" placeholder=\"你的名字\" name=\"username\"" +
+            " hidden=\"hidden\" value=" + unescape(getCookie("username")) + "><br/>"
+        $form.append(html)
+        $form.submit(function () {
+
+            if (Number($("#2").val()) > 10) {
+                swal({ type: "warning", title: "优先级的取值范围为1~10" });
+                return false
+            }
+            if ($("#starttime").val() > $("#endtime").val()) {
+                swal({ type: "warning", title: "开始时间不能比截止时间大" });
+
+                return false;
+            } else {
+                swal({
+                        title: "",
+                        text: "成功添加该任务",
+                        type: "success",
+                    },function(){
+                    stime = $("#starttime").val().replace("T", " ");
+                    etime = $("#endtime").val().replace("T", " ");
+                    url = "header=" + $("#1").val() +
+                        "&ergency=" + Number($("#2").val()) +
+                        "&start_time=" + stime +
+                        "&end_time=" + etime +
+                        "&addup=" + $("#4").val() +
+                        "&username=" + unescape(getCookie("username"));
+                    var xmlhttp;
+                    if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp = new XMLHttpRequest();
+                    }
+                    xmlhttp.open("GET", "/data/update?" + url, true);
+                    xmlhttp.send();
+                })
+
+            }
+        })
+    })
+</script>
+<div class="login">
+    <form action="/data/updatefalse" id="form01" method="get" target="nm_iframe">
+
+        <h2>任务</h2>
+        <div class="login_box">
+            <!-- required就是不能为空  必须在css效果中有很大的作用 -->
+
+            <input id='1' name="header" name='name' required="required" type="text"/>
+            <label for="1">标题</label>
+        </div>
+        <div class="login_box">
+            <input id='2' name='ergency' pattern="^[1-9]\d*$" required="required" type="text">
+            <label for="2">优先级</label>
+        </div>
+        <div class="login_box">
+            <input id='4' name='addup' required="required" type="text">
+            <label for="2">备注</label>
+        </div>
+
+        <div class="login_box">
+            开始时间：<input id="starttime" name="start_time" required="required" type="datetime-local">
+        </div>
+        <div class="login_box">
+            截止时间：<input id="endtime" name="end_time" required="required" type="datetime-local">
+        </div>
+        <a href="javascript:void(0)">
+            <button class="myButton" id="btnlog" style="background-color:transparent;
+         border-style:none; font-size: xx-large" type="submit">load
+            </button>
+            <span></span>
+            <span></span>
+            <span></span>
+            <!--        <span></span>-->
+        </a> <a href="javascript:void(0)">
+        <button class="myButton" id="retry" onclick="location.href='main.html'" style="background-color:transparent;
+         border-style:none; font-size: xx-large" type="button">exit
+        </button>
+    </a>
+    </form>
+    <iframe id="id_iframe" name="nm_iframe" style="display:none;"></iframe>
+
+
+</div>
+
+</body>
+</html>

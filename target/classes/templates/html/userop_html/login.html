@@ -1,0 +1,137 @@
+﻿<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" href="http://www.huangwx.cn/css/sweetalert.css">
+    <script type="text/javascript" src="http://www.huangwx.cn/js/sweetalert-dev.js"></script>
+    <link href="../../css/styles.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="htmleaf-container">
+    <div class="wrapper">
+        <div class="container">
+            <h1>Welcome</h1>
+            <form action="/user/login1" id="form01" method="post" target="nm_iframe">
+                <input id="us1" name="username" placeholder="用户名" required="required" type="text"/>
+                <input id="ps1" name="password" placeholder="密码" required="required" type="password"/>
+                <button class="but" id="btnlog" type="submit">登录</button><br/><br/>
+                <button class="but" id="refound" type="button" onclick="findemail()">找回密码</button><br/><br/>
+                <button class="but" id="exit01" onclick="location.href='../../index.html'" type="button">离开</button>
+            </form>
+            <iframe id="id_iframe" name="nm_iframe" style="display:none;"></iframe>
+            <br/><br/><br/><br/>
+        </div>
+
+        <ul class="bg-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+</div>
+
+<script src="../../jqsrc/jquery-1.7.2.js" type="text/javascript"></script>
+<script>
+    var findemail = function(){
+        swal({
+            title: "<small>找回密码</small>",
+            inputPlaceholder: "请输入您注册时填写的邮箱",
+            html: true,
+            type: "input",
+            cancelButtonText: "取消",
+            confirmButtonText: "确认",
+            showCancelButton: true,
+            showLoaderOnConfirm: true
+        }, function(inputvalue){
+            regemail="^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$"
+            reg = new RegExp(regemail)
+            if(!reg.test(inputvalue)){
+                swal({ type: "error", title: "请输入正确的邮箱格式" });
+                return false
+            }else{
+                url = "/user/findemail?email="+inputvalue
+                var xmlhttp;
+                if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp = new XMLHttpRequest();
+                }
+                xmlhttp.open("POST", url, true);
+                xmlhttp.send();
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                        var responseText = JSON.parse(xmlhttp.responseText);
+                        if (responseText["success"] === true) {
+                            swal({ type: "success", title: "成功发送" });
+                        } else {
+                            swal({ type: "error", title: "数据库中没有这个邮箱，未成功发送" });
+                        }
+                    }
+                }
+            }
+
+        })
+    }
+    $('#login-button').click(function (event) {
+        event.preventDefault();
+        $('form').fadeOut(500);
+        $('.wrapper').addClass('form-success');
+    });
+
+    function setCookie(name, value) {
+        var Days = 30;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 30);
+        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toUTCString() + "; path=/";
+    }
+
+    $(function () {
+        $("#exit01").click(function () {
+            window.location.href = "../../index.html";
+        })
+        //像服务器发送消息，并接收服务器传来的["success"]信号,并做判断
+        $("#form01").submit(function () {
+            us1 = $("#us1").val();
+            ps1 = $("#ps1").val();
+            url = "username=" + us1 + "&password=" + ps1;
+            var xmlhttp;
+            if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            }
+            xmlhttp.open("POST", "/user/login?" + url, true);
+            xmlhttp.send();
+            xmlhttp.onreadystatechange = function () {
+                // 判断readyState就绪状态是否为4，判断status响应状态码是否为200
+                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                    //获取服务器的响应结果
+                    var responseText = JSON.parse(xmlhttp.responseText);
+                    if (responseText["success"] === true) {
+                        var usrname = document.getElementById("us1").value
+                        setCookie("username", usrname)
+                        swal({ type: "success", title: "登录成功" });
+                        setTimeout(function () {
+                            window.location.href = "../todolist_html/main.html";
+                        },2000)
+                    } else {
+                        alert("用户名重复或密码错误，请重试");
+                    }
+                }
+
+            }
+
+        })
+    })
+</script>
+
+<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';color:#000000">
+    <h1>登录系统</h1>
+</div>
+</body>
+</html>

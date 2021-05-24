@@ -1,0 +1,55 @@
+﻿<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title></title>
+    <link href="test1/testindex/css/reset.css" rel="stylesheet"/>
+    <link href="test1/testindex/css/login.css" rel="stylesheet"/>
+    <script src="jqsrc/jquery-1.7.2.js" type="text/javascript"></script>
+    <script src="test1/testindex/js/login.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="http://www.huangwx.cn/css/sweetalert.css">
+    <script type="text/javascript" src="http://www.huangwx.cn/js/sweetalert-dev.js"></script>
+</head>
+<body>
+<div class="page">
+    <div class="loginwarrp">
+        <div class="logo">To-Do List</div>
+        <div class="login_form">
+            <form action="" id="Login" method="post" name="Login" onsubmit="">
+                <li class="login-sub">
+                    <input id="btn01" name="Submit" type="button" value="login"/><br/>
+                    <input id="btn02" name="Reset" type="button" value="signup"/>
+                </li>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    window.onload = function () {
+
+
+
+        $("#btn01").click(function () {
+            window.location.href = "html/userop_html/login.html"
+        })
+        $("#btn02").click(function () {
+            window.location.href = "html/userop_html/regist.html"
+        })
+        var config = {
+            vx: 4,
+            vy: 4,
+            height: 4,
+            width: 4,
+            count: 100,
+            color: "121, 162, 185",
+            stroke: "100, 200, 180",
+            dist: 6000,
+            e_dist: 20000,
+            max_conn: 10
+        }
+        CanvasParticle(config);
+    }
+</script>
+<script src="test1/testindex/js/canvas-particle.js" type="text/javascript"></script>
+</body>
+</html>
