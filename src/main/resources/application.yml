@@ -1,0 +1,31 @@
+server:
+  port: 9091
+  max-http-header-size: "8192"
+spring:
+  datasource:
+    name: root
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://1.15.139.221:3306/root?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+  http:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+  resources:
+    static-locations: classpath:/templates  #访问静态页面
+
+  mail:
+    host: smtp.qq.com #发送邮件服务器
+    username: 593058278@qq.com #QQ邮箱
+    password: alpqwonfezndbdee #客户端授权码
+    protocol: smtp #发送邮件协议
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.port: 465 #端口号465或587
+    properties.mail.display.sendmail: Javen #可以任意
+    properties.mail.display.sendname: Spring Boot Guide Email #可以任意
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8

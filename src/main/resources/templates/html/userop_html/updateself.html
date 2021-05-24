@@ -1,0 +1,109 @@
+﻿﻿﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title></title>
+    <link href="../../test1/testindex/css/reset.css" rel="stylesheet"/>
+    <link href="../../test1/testindex/css/login.css" rel="stylesheet"/>
+    <script src="../../jqsrc/jquery-1.7.2.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="http://www.huangwx.cn/css/sweetalert.css">
+    <script type="text/javascript" src="http://www.huangwx.cn/js/sweetalert-dev.js"></script>
+
+</head>
+<body>
+<div class="page">
+    <div class="loginwarrp">
+        <div class="logo">修改密码</div>
+        <div class="login_form">
+            <form action="/user/update" id="Login" method="POST" name="Login" onsubmit="" target="nm_iframe">
+                <li class="login-item">
+                    <input class="login_input" disabled="disabled" hidden="hidden" id="username" name="UserName"
+                           type="text">
+                    <span class="error" id="count-msg"></span>
+                </li>
+                <li class="login-item">
+                    <span>新的密码：</span>
+                    <input class="login_input" id="password" name="password" type="password">
+                    <span class="error" id="password-msg"></span>
+                </li>
+                <li class="login-sub">
+                    <input id="btnupdate" name="Submit" type="submit" value="确定"/>
+                    <input id="exit" type="reset" value="退出"/>
+                </li>
+            </form>
+            <iframe id="id_iframe" name="nm_iframe" style="display:none;"></iframe>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function checkName() {
+        var name = $('#username').val();
+        if (name == null || name == "") {
+            //提示错误
+            $('#count-msg').html("用户名不能为空");
+            return false;
+        }
+
+        $('#count-msg').empty();
+        return true;
+    }
+
+    function checkPassword() {
+        var password = $('#password').val();
+        if (password == null || password == "") {
+            //提示错误
+            $('#password-msg').html("密码不能为空");
+            return false;
+        }
+        $('#password-msg').empty();
+        return true;
+    }
+
+    var getCookie = function (name) {
+        var arr;
+        var reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg)) {
+            return arr[2];
+        } else
+            return null;
+    };
+    window.onload = function () {
+
+        var config = {
+            vx: 4,
+            vy: 4,
+            height: 2,
+            width: 2,
+            count: 100,
+            color: "121, 162, 185",
+            stroke: "100, 200, 180",
+            dist: 6000,
+            e_dist: 20000,
+            max_conn: 10
+        }
+        CanvasParticle(config);
+        $('#password').blur(checkPassword);
+        $("#username").val(getCookie("username"))
+        $("#btnupdate").click(function () {
+            if(checkPassword()){
+                var $psword = $("#password").val()
+                url = "username=" + getCookie("username") + "&password=" + $psword;
+                swal("已成功修改密码", "希望你可以记住","success");
+                var xmlhttp;
+                if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp = new XMLHttpRequest();
+                }
+                xmlhttp.open("POST", "/user/update?" + url, true);
+                xmlhttp.send();
+            }
+        })
+        $("#exit").click(function () {
+            document.location.href = "../todolist_html/main.html";
+            document.event.returnvalue = false
+        })
+    }
+</script>
+<script src="../../test1/testindex/js/canvas-particle.js" type="text/javascript"></script>
+</body>
+</html>
